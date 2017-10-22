@@ -2,12 +2,10 @@
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
-      <in>Adafruit_mfGFX.cpp</in>
-      <in>MQTT.cpp</in>
-      <in>PhotonDisplay.cpp</in>
-      <in>RGBmatrixPanel.cpp</in>
-      <in>SparkIntervalTimer.cpp</in>
-      <in>fonts.cpp</in>
+      <df name="src">
+        <in>Weather.cpp</in>
+        <in>Weather.h</in>
+      </df>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -42,17 +40,9 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
-      <item path="Adafruit_mfGFX.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Weather.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="MQTT.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="PhotonDisplay.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RGBmatrixPanel.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="SparkIntervalTimer.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="fonts.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Weather.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
