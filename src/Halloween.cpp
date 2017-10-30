@@ -1,3 +1,4 @@
+#include "Adafruit_GFX.h"
 #include "PhotonDisplay.h"
 #include "math.h"
 
@@ -5,9 +6,8 @@
 void setupHalloween() {
 
   matrix.begin();
-  matrix.setFont(COMICS_8);
+  //matrix.setFont(ARIAL_8);
   matrix.setTextWrap(false); // Allow text to run off right edge
-  //matrix.setTextSize(2);
   matrix.setTextColor(matrix.ColorHSV(255, 255, brightness, true));
 }
 

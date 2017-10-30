@@ -15,6 +15,15 @@ String getScrollText() {
 
 void setScrollText(String newText) {
     displayText = newText;
+    displayText.replace("ä","ae");
+    displayText.replace("ü","ue");
+    displayText.replace("ö","oe");
+    displayText.replace("Ä","Ae");
+    displayText.replace("Ü","Ue");
+    displayText.replace("Ö","Oe");
+    displayText.replace("ß","ss");
+    displayText.replace("\n"," ");
+    displayText.replace("\r\n"," ");
     textX = matrix.width();
     textMin = displayText.length() * -6;
 }
@@ -54,7 +63,7 @@ void loopScrollText() {
 
   // Draw big scrolly text on top
   matrix.setTextColor(matrix.ColorHSV(hue, 255, brightness, true));
-  matrix.setCursor(textX, 4);
+  matrix.setCursor(textX, 10);
   matrix.print(displayText);
 
   // Move text left (w/wrap), increase hue

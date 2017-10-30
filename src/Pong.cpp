@@ -1,5 +1,5 @@
 #include "PhotonDisplay.h"
-#include "SparkIntervalTimer.h"
+#include <SparkIntervalTimer.h>
 
 #include "RGBAnimation.h"
 #include "RGBPong.h"

@@ -1,4 +1,5 @@
-#include "Adafruit_mfGFX.h"   // Core graphics library
+#include "Adafruit_GFX.h"   // Core graphics library
+#include "fonts/DroidSans.h"
 #include "RGBmatrixPanel.h" // Hardware-specific library
 #include "math.h"
 #include "MQTT.h"
@@ -7,6 +8,7 @@
 #include "Pong.h"
 #include "ScrollText.h"
 #include "Weather.h"
+#include "SpaceInvader.h"
 
 #define CLK	D6
 #define OE 	D7
@@ -197,7 +199,10 @@ int setDisplayMode(String command)
     case 3:
         setupPong();
         break;
-    case 4:
+//    case 4:
+//        setupSpaceInvader();
+//        break;
+    case 5:
         setupHalloween();
         break;
     default:
@@ -212,7 +217,7 @@ int setDisplayMode(String command)
 void publishState() {
 
     String myID = System.deviceID();
-
+    
     if (!client.isConnected()) {
         client.connect(myID, MQTT_USER, MQTT_PASSWORD);
     }
@@ -245,11 +250,15 @@ void loadSettings() {
     address = address + sizeof(brightness);
     EEPROM.get(address, displayEnabled);
     address = address + sizeof(displayEnabled);
-    EEPROM.get(address, displayText);
+    //EEPROM.get(address, displayText);
 }
 
 void saveSettings() {
+
     int address = 1;
+    char charArray[strlen(displayText)+1];
+    strcpy(charArray, displayText);
+
     EEPROM.put(address, dispMode);
     address = address + sizeof(dispMode);
     EEPROM.put(address, fg_color);
@@ -260,13 +269,13 @@ void saveSettings() {
     address = address + sizeof(brightness);
     EEPROM.put(address, displayEnabled);
     address = address + sizeof(displayEnabled);
-    EEPROM.put(address, displayText);
+    //EEPROM.put(address, charArray);
 }
 
 void setup() {
   matrix.begin();
   matrix.setTextWrap(false); // Allow text to run off right edge
-  matrix.setFont(COMICS_8);
+  matrix.setFont(&DroidSans6pt8b);
   matrix.setTextSize(1);
 
 #define FAILSAFE 1
@@ -293,7 +302,10 @@ void setup() {
     case 3:
         setupPong();
         break;
-    case 4:
+//    case 4:
+//       setupSpaceInvader();
+//        break;
+    case 5:
         setupHalloween();
         break;
       default:
@@ -302,7 +314,7 @@ void setup() {
   
   randomSeed(analogRead(A6) + micros());
   Time.zone(+1);
-  Time.setDSTOffset(1);
+  Time.setDSTOffset(0);
   Time.beginDST();
   
   client.connect(System.deviceID(), MQTT_USER, MQTT_PASSWORD); // uid:pwd based authentication
@@ -332,7 +344,10 @@ void loop() {
         case 3:
             loopPong();
             break;
-        case 4:
+//        case 4:
+//            loopSpaceInvader();
+//            break;
+        case 5:
             loopHalloween();
             break;
         default:
