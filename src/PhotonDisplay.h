@@ -5,6 +5,9 @@
 #include "RGBmatrixPanel.h" // Hardware-specific library
 
 extern RGBmatrixPanel matrix;
-extern uint8_t brightness;
+extern uint16_t brightness;
+
+void loadSettings();
+void saveSettings();
 
 #endif

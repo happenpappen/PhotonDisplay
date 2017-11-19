@@ -26,32 +26,32 @@ void setScrollText(String newText) {
     displayText.replace("\r\n"," ");
     textX = matrix.width();
     textMin = displayText.length() * -6;
+    saveSettings();
 }
 
 void setupScrollText() {
 
   matrix.setTextColor(matrix.ColorHSV(255, 255, brightness, true));
 
-  if (displayText == "") { displayText = "Wenn Fledermaeuse unruhig flattern, \
+  if (displayText == "") 
+  { 
+      displayText = "Wenn Fledermaeuse unruhig flattern, \
 Sargdeckel gespenstisch knattern, \
 Geister ueber den Friedhof schleichen, \
 auferstehen blasse Leichen; \
- \
 Wenn feuchtes Laub daemonisch knirscht, \
 der Totengraeber lautlos pirscht, \
 Hexen mit dem Besen fliegen, \
 Vampire ihre Nahrung kriegen; \
- \
 Wenn Menschenfressers Maegen knurren, \
 schwarze Katzen leise schnurren, \
 Woelfe heulen in der Nacht, \
 der Tod aus seinem Schlaf erwacht; \
- \
 Wenn Skelette klapprig schreiten, \
 Kobolde auf Knochen reiten, \
 der Satan laut nach Gnade schreit, \
 dann ist Halloween nicht weit.";
-textMin = displayText.length() * -6;
+      textMin = displayText.length() * -6;
   }
 }
 

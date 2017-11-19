@@ -9,6 +9,10 @@
 #include "ScrollText.h"
 #include "Weather.h"
 #include "SpaceInvader.h"
+#include "LiveTicker.h"
+
+#define SETTINGS_MAGIC 46
+#define SETTINGS_START 1
 
 #define CLK	D6
 #define OE 	D7
@@ -33,12 +37,16 @@ unsigned long lastSync = millis();
 
 static uint16_t fg_color = 0x0080;
 static uint16_t bg_color = 0x0000;
-uint8_t brightness = 255;
+uint16_t brightness = 255;
+static uint16_t dispMode = 1;
 
 // Display modes:
 // 1: Scrolltext
-
-int dispMode = 1;
+// 2: Weather
+// 3: Bundesliga Live-Ticker
+// 4: Pong
+// 5: Invader
+// 6: Halloween
 
 void mqtt_callback(char *, byte *, unsigned int);
 void saveSettings();
@@ -78,7 +86,7 @@ void mqtt_callback(char *topic, byte *payload, unsigned int length) {
         client.connect(myID, MQTT_USER, MQTT_PASSWORD);
     }
 
-    client.publish("/" + myID + "/state/LastPayload", "Last Payload: " + String(myPayload));
+    client.publish("/" + myID + "/state/LastPayload", String(myPayload));
 
     if (myTopic == "/"+myID+"/set/DisplayMode") {
         setDisplayMode(String(myPayload));
@@ -197,12 +205,15 @@ int setDisplayMode(String command)
         setupWeather();
         break;
     case 3:
+        setupLiveTicker();
+        break;
+    case 4:
         setupPong();
         break;
-//    case 4:
-//        setupSpaceInvader();
-//        break;
     case 5:
+        setupSpaceInvader();
+        break;
+    case 6:
         setupHalloween();
         break;
     default:
@@ -239,26 +250,51 @@ void publishState() {
 }
 
 void loadSettings() {
-    int address = 1;
-    EEPROM.get(address, dispMode);
-    address = address + sizeof(dispMode);
-    EEPROM.get(address, fg_color);
-    address = address + sizeof(fg_color);
-    EEPROM.get(address, bg_color);
-    address = address + sizeof(bg_color);
-    EEPROM.get(address, brightness);
-    address = address + sizeof(brightness);
-    EEPROM.get(address, displayEnabled);
-    address = address + sizeof(displayEnabled);
-    //EEPROM.get(address, displayText);
+
+    uint16_t maxSize = EEPROM.length();
+    uint16_t address = 1;
+    uint8_t version = 0;
+    char loadArray[2048];
+
+    EEPROM.get(address++, version);
+
+    if (version == SETTINGS_MAGIC) { // Valid settings in EEPROM?
+        EEPROM.get(address, dispMode);
+        address = address + sizeof (dispMode);
+        EEPROM.get(address, fg_color);
+        address = address + sizeof (fg_color);
+        EEPROM.get(address, bg_color);
+        address = address + sizeof (bg_color);
+        EEPROM.get(address, brightness);
+        address = address + sizeof (brightness);
+        EEPROM.get(address, displayEnabled);
+        address = address + sizeof (displayEnabled);
+        EEPROM.get(address,loadArray);
+        displayText=String(loadArray);
+    } else {
+        dispMode = 1;
+        fg_color=0x0080;
+        bg_color=0x0000;
+        brightness=255;
+        displayEnabled=1;
+        displayText="Hello World!";
+        saveSettings();
+    }
 }
 
 void saveSettings() {
 
-    int address = 1;
-    char charArray[strlen(displayText)+1];
-    strcpy(charArray, displayText);
+    uint16_t address = SETTINGS_START;
+    uint16_t maxlength = EEPROM.length();
+    char saveArray[2048];
 
+    if (displayText.length() < 2048) {
+        displayText.toCharArray(saveArray,displayText.length());
+    } else {
+        String("String to long! (a) (L:"+String(displayText.length())+")").toCharArray(saveArray,displayText.length());
+    }
+
+    EEPROM.write(address++, SETTINGS_MAGIC);
     EEPROM.put(address, dispMode);
     address = address + sizeof(dispMode);
     EEPROM.put(address, fg_color);
@@ -269,7 +305,11 @@ void saveSettings() {
     address = address + sizeof(brightness);
     EEPROM.put(address, displayEnabled);
     address = address + sizeof(displayEnabled);
-    //EEPROM.put(address, charArray);
+    if (maxlength-address-1 < displayText.length()) {
+        EEPROM.put(address, saveArray);
+    } else {
+        EEPROM.put(address, "String to long! (b) (L:"+String(maxlength-address-1)+")");
+    }
 }
 
 void setup() {
@@ -277,18 +317,6 @@ void setup() {
   matrix.setTextWrap(false); // Allow text to run off right edge
   matrix.setFont(&DroidSans6pt8b);
   matrix.setTextSize(1);
-
-#define FAILSAFE 1
-  
-#ifdef FAILSAFE
-  Serial.begin(9600);
-  dispMode = 1;
-  fg_color=255;
-  bg_color=0;
-  brightness = 255;
-  displayEnabled=true;
-  saveSettings();
-#endif
 
   loadSettings();
 
@@ -300,12 +328,15 @@ void setup() {
         setupWeather();
         break;
     case 3:
+        setupLiveTicker();
+        break;
+    case 4:
         setupPong();
         break;
-//    case 4:
-//       setupSpaceInvader();
-//        break;
     case 5:
+       setupSpaceInvader();
+        break;
+    case 6:
         setupHalloween();
         break;
       default:
@@ -342,12 +373,15 @@ void loop() {
             loopWeather();
             break;
         case 3:
+            loopLiveTicker();
+            break;
+        case 4:
             loopPong();
             break;
-//        case 4:
-//            loopSpaceInvader();
-//            break;
         case 5:
+            loopSpaceInvader();
+            break;
+        case 6:
             loopHalloween();
             break;
         default:
@@ -357,7 +391,7 @@ void loop() {
         matrix.fillScreen(0);
     }
     
-  delay(15);	// Slow down animation!
+  delay(10);	// Slow down animation!
 
   if (client.isConnected()) {
      client.loop();
