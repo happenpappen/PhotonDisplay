@@ -39,3 +39,7 @@ MQTT_credentials.h
 # Debug files
 *.dSYM/
 *.su
+
+# Backup files
+*_bak
+*.bak
