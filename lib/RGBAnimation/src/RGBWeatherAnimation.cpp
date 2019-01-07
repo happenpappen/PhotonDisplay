@@ -143,11 +143,11 @@ void RGBWeatherAnimationClass::draw()
 
 
   // map temp to color
-  int dmy = map(constrain(_w->temp[_curFrame], -10, 30), -15, 35, 0, 31);
+  int dmy = map((int)constrain(_w->temp[_curFrame], -10, 30), -15, 35, 0, 31);
   textColor = (dmy < 8 ? 0 : 31) << 11 | (dmy < 8 ? dmy : 31 - dmy) << 6 | (dmy < 8 ? 31 : 0) << 0;
 
   // print day temperature
-  snprintf(text, sizeof(text), "%.0f%\x01", round(_w->temp[_curFrame])); // \x01 for ° symbol (otherwise 176 or 0xB0 which is non-present in font)
+  snprintf(text, sizeof(text), "%.0f%\x01", round(_w->temp[_curFrame])); // \x01 for ï¿½ symbol (otherwise 176 or 0xB0 which is non-present in font)
   print3x6(_pos.x + 16 - strlen(text) * 3, _pos.y + 1, text, _d.Color444(0, 0, 0));
   print3x6(_pos.x + 16 - strlen(text) * 3 - 1, _pos.y, text, textColor);
 
