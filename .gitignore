@@ -1,8 +1,3 @@
-# NetBeans specific
-nbproject/private/
-build/
-nbbuild/
-
 # Files containing credentials:
 MQTT_credentials.h
 
@@ -11,6 +6,7 @@ MQTT_credentials.h
 *.ko
 *.obj
 *.elf
+*.bin
 
 # Precompiled Headers
 *.gch
@@ -43,3 +39,5 @@ MQTT_credentials.h
 # Backup files
 *_bak
 *.bak
+
+\.vscode/
