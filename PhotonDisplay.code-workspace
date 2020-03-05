@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"cortex-debug.openocdPath": "${command:particle.getDebuggerOpenocdPath}"
+	}
 }

@@ -7,6 +7,8 @@
 //
 String displayTicker;
 
+extern uint16_t fg_color;
+
 // The type of data that we want to extract from the page
 struct UserData {
   char name[32];
@@ -29,7 +31,6 @@ http_response_t response;
 
 extern int textX;
 extern int textMin;
-extern int hue;
 
 // Parse the JSON from the input string and extract the interesting values
 // Here is the JSON we need to parse
@@ -143,15 +144,13 @@ void loopLiveTicker() {
   matrix.fillScreen(0);
 
   // Draw big scrolly text on top
-  matrix.setTextColor(matrix.ColorHSV(hue, 255, brightness, true));
+  matrix.setTextColor(matrix.ColorHSV(fg_color, 255, brightness, true));
   matrix.setCursor(textX, 10);
   matrix.print(displayTicker);
 
-  // Move text left (w/wrap), increase hue
+  // Move text left (w/wrap)
   if((--textX) < textMin) textX = matrix.width();
-  hue += 7;
-  if(hue >= 1536) hue -= 1536;
 
   // Update display
-  matrix.swapBuffers(false);
+  matrix.swapBuffers(true);
 }

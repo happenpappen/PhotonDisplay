@@ -6,6 +6,8 @@
 
 #include "RGBSwypePath.h"
 
+extern const uint32_t image_data_bvb[];
+
 RGBAnimationClass* rgbPongAnim[] = { NULL, NULL };
 const int numPongAnims = sizeof(rgbPongAnim)/sizeof(rgbPongAnim[0]);
  
@@ -47,10 +49,19 @@ void loopPong() {
     }
 
     matrix.fillScreen(0); // ensure blank canvas
-    
+
     for (int i = 0; i < numPongAnims; i++) {
         if (rgbPongAnim[i]) rgbPongAnim[i]->drawFrame(day);
     }
-    
+
+/*
+ *     int x=0, y=0;
+
+    for (y = 0; y < 16; y++) {
+        for (int x = 0; x < 16; x++) {
+          matrix.drawPixel(64+x, y, image_data_bvb[x+y*16]);
+        }
+    }   
+*/    
     matrix.swapBuffers(true);
 }

@@ -5,9 +5,11 @@
 //
 String displayText;
 
+extern uint16_t fg_color;
+extern uint16_t bg_color;
+
 int    textX   = matrix.width(),
-       textMin = displayText.length() * -6,
-       hue     = 0;
+       textMin = displayText.length() * -6;
 
 String getScrollText() {
     return displayText;
@@ -56,21 +58,19 @@ dann ist Halloween nicht weit.";
 }
 
 void loopScrollText() {
-  byte i;
 
   // Clear background
-  matrix.fillScreen(0);
+  matrix.fillScreen(bg_color);
 
   // Draw big scrolly text on top
-  matrix.setTextColor(matrix.ColorHSV(hue, 255, brightness, true));
-  matrix.setCursor(textX, 10);
+  //matrix.setTextColor(matrix.ColorHSV(fg_color, 255, brightness, true));
+  matrix.setTextColor(fg_color, bg_color);
+  matrix.setCursor(textX, 12);
   matrix.print(displayText);
 
-  // Move text left (w/wrap), increase hue
+  // Move text left (w/wrap)
   if((--textX) < textMin) textX = matrix.width();
-  hue += 7;
-  if(hue >= 1536) hue -= 1536;
 
   // Update display
-  matrix.swapBuffers(false);
+  matrix.swapBuffers(true);
 }

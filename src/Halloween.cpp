@@ -1,4 +1,3 @@
-#include "Adafruit_GFX.h"
 #include "PhotonDisplay.h"
 #include "math.h"
 
@@ -22,5 +21,5 @@ void loopHalloween() {
   matrix.setCursor(0, 4);
 
   // Update display
-  matrix.swapBuffers(false);
+  matrix.swapBuffers(true);
 }
