@@ -8,7 +8,7 @@ extern uint16_t fg_color;
 extern uint16_t bg_color;
 
 // Sets whether the clock should be 12 hour format or not.
-bool twelveHourFormat = true;
+bool twelveHourFormat = false;
 unsigned long oneSecondLoopDue = 0;
 bool showColon = true;
 bool forceRefresh = true;

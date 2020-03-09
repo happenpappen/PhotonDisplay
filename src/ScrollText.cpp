@@ -63,8 +63,7 @@ void loopScrollText() {
   matrix.fillScreen(bg_color);
 
   // Draw big scrolly text on top
-  //matrix.setTextColor(matrix.ColorHSV(fg_color, 255, brightness, true));
-  matrix.setTextColor(fg_color, bg_color);
+  matrix.setTextColor(matrix.ColorHSV(255, 255, brightness, true));
   matrix.setCursor(textX, 12);
   matrix.print(displayText);
 

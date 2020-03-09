@@ -13,12 +13,13 @@
 #include "MQTT_credentials.h"
 #include "Curve.h"
 #include "Halloween.h"
+#include "LiveTicker.h"
+#include "PanelDemo.h"
 #include "Pong.h"
 #include "ScrollText.h"
+#include "SpaceInvader.h"
 #include "TetrisClock.h"
 #include "Weather.h"
-#include "SpaceInvader.h"
-#include "LiveTicker.h"
 #include "particle-dst.h"
 
 #include <stdlib.h>
@@ -70,6 +71,7 @@ String bgColorStr = "000000";
 // 6: Halloween
 // 7: Curve
 // 8: Tetris Clock
+// 9: Panel Demo
 
 void mqtt_callback(char *, byte *, unsigned int);
 void saveSettings();
@@ -146,7 +148,12 @@ void mqtt_callback(char *topic, byte *payload, unsigned int length) {
     }
     
     if (myTopic == "/"+myID+"/set/Brightness") {
+    if (String(myPayload).indexOf(",") > 0) {
+        setBrightness(String(myPayload).substring(0, String(myPayload).indexOf(",")));
+        client.publish("/" + myID + "/state/LastBrightness", String(myPayload).substring(0, String(myPayload).indexOf(",")));
+    } else {
         setBrightness(String(myPayload));
+    }
         stateChanged = true;
     }
     
@@ -166,8 +173,8 @@ int getBrightness(String command)
 int setBrightness(String value)
 {
     brightness = atoi(value);
-    brightness = brightness < 50 ? 50 : brightness;
-    brightness = brightness > 255 ? 255 : brightness;
+    //brightness = brightness < 50 ? 50 : brightness;
+    //brightness = brightness > 255 ? 255 : brightness;
 
     saveSettings();
     return brightness;
@@ -265,6 +272,9 @@ int setDisplayMode(String command)
         break;
     case 8:
         setupTetrisClock();
+        break;
+    case 9:
+        setupPanelDemo();
         break;
     default:
         break;
@@ -397,6 +407,9 @@ void setup() {
     case 8:
         setupTetrisClock();
         break;
+    case 9:
+        setupPanelDemo();
+        break;
     default:
         break;
   }
@@ -459,6 +472,9 @@ void loop() {
             break;
         case 8:
             loopTetrisClock();
+            break;
+        case 9:
+            loopPanelDemo();
             break;
         default:
             break;

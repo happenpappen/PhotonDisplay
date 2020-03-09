@@ -76,7 +76,7 @@ bool readReponseContent(struct UserData* userData) {
   JsonObject& root = jsonBuffer.parseObject((char *)responseBody);
 
   if (!root.success()) {
-    Serial.println("parseObject() failed");
+    Particle.publish("DEBUG","parseObject() failed",PRIVATE);
     return false;
   }
 
@@ -87,6 +87,7 @@ bool readReponseContent(struct UserData* userData) {
 
   if (!root.success()) {
     Serial.println("JSON parsing failed!");
+    Particle.publish("DEBUG","JSON parsing failed!",PRIVATE);
     return false;
   }
 
@@ -101,7 +102,7 @@ bool readReponseContent(struct UserData* userData) {
 }
 
 String updateTicker() {
-    String apiRequest = "/v1/competitions/452/fixtures?matchday=11";
+    String apiRequest = "/v2/competitions/BL1/fixtures?matchday=11";
     String newText = "";
     textX = matrix.width();
     textMin = displayTicker.length() * -6;
@@ -116,6 +117,9 @@ String updateTicker() {
 
     // Get request
     httpClient.get(request, response, headers);
+
+    Particle.publish("DEBUG","Response status: "+response.status,PRIVATE);
+    Particle.publish("DEBUG","Response body: "+response.body,PRIVATE);
 
     UserData userData;
     readReponseContent(&userData);
