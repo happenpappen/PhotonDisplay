@@ -15,19 +15,6 @@ bool forceRefresh = true;
 volatile bool finishedAnimating = false;
 String lastDisplayedTime = "";
 
-void handleColonAfterAnimation() {
-
-  // It will draw the colon every time, but when the colour is black it
-  // should look like its clearing it.
-  uint16_t colour =  showColon ? tetris.tetrisWHITE : tetris.tetrisBLACK;
-  // The x position that you draw the tetris animation object
-  int x = twelveHourFormat ? -6 : 2;
-  // The y position adjusted for where the blocks will fall from
-  // (this could be better!)
-  int y = 26 - (TETRIS_Y_DROP_DEFAULT * tetris.scale);
-  tetris.drawColon(x, y, colour);
-}
-
 void setupTetrisClock() {
   
   matrix.fillScreen(tetris.tetrisBLACK);
@@ -53,6 +40,10 @@ void loopTetrisClock()
   String timeString = "";
   String AmPmString = "";
   unsigned long now = millis();
+  // It will draw the colon every time, but when the colour is black it
+  // should look like its clearing it.
+  uint16_t colour =  showColon ? tetris.tetrisWHITE : tetris.tetrisBLACK;
+
   if (now > oneSecondLoopDue) {
 
     timeString = Time.format("%H:%M");
@@ -73,7 +64,12 @@ void loopTetrisClock()
     // to blink
     if (finishedAnimating)
     {
-      handleColonAfterAnimation();
+      // The x position that you draw the tetris animation object
+      int x = twelveHourFormat ? -6 : 2;
+      // The y position adjusted for where the blocks will fall from
+      // (this could be better!)
+      int y = 26 - (TETRIS_Y_DROP_DEFAULT * tetris.scale);
+      tetris.drawColon(x, y, colour);
     }
     oneSecondLoopDue = now + 1000;
   }

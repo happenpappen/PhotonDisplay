@@ -10,10 +10,18 @@ String displayTicker;
 extern uint16_t fg_color;
 
 // The type of data that we want to extract from the page
-struct UserData {
-  char name[32];
-  char company[32];
-};
+typedef struct {
+  char teamname[32];
+  uint8_t logoid;
+} TeamData;
+
+typedef struct {
+  TeamData hometeam, awayteam;
+  uint8_t homescore, awayscore;
+} Fixture;
+
+TeamData Teams[18];
+Fixture Fixtures[9];
 
 HttpClient httpClient;
 
@@ -57,7 +65,7 @@ extern int textMin;
 //     "bs": "harness real-time e-markets"
 //   }
 // }
-bool readReponseContent(struct UserData* userData) {
+bool readReponseContent(TeamData* teamData) {
   // Compute optimal size of the JSON buffer according to what we need to parse.
   // See https://bblanchon.github.io/ArduinoJson/assistant/
   const size_t BUFFER_SIZE =
@@ -92,8 +100,7 @@ bool readReponseContent(struct UserData* userData) {
   }
 
   // Here were copy the strings we're interested in
-  strcpy(userData->name, root["name"]);
-  strcpy(userData->company, root["company"]["name"]);
+  strcpy(teamData->teamname, root["name"]);
   // It's not mandatory to make a copy, you could just use the pointers
   // Since, they are pointing inside the "content" buffer, so you need to make
   // sure it's still in memory when you read the string
@@ -121,8 +128,8 @@ String updateTicker() {
     Particle.publish("DEBUG","Response status: "+response.status,PRIVATE);
     Particle.publish("DEBUG","Response body: "+response.body,PRIVATE);
 
-    UserData userData;
-    readReponseContent(&userData);
+    TeamData teamData;
+    readReponseContent(&teamData);
 
     return newText;
 }
