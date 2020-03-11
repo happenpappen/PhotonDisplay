@@ -11,7 +11,7 @@
 #include "math.h"
 #include "MQTT.h"
 #include "MQTT_credentials.h"
-#include "Curve.h"
+#include "GameOfLife.h"
 #include "Halloween.h"
 #include "LiveTicker.h"
 #include "PanelDemo.h"
@@ -69,7 +69,7 @@ String bgColorStr = "000000";
 // 4: Pong
 // 5: Invader
 // 6: Halloween
-// 7: Curve
+// 7: Game of live
 // 8: Tetris Clock
 // 9: Panel Demo
 
@@ -268,7 +268,7 @@ int setDisplayMode(String command)
         setupHalloween();
         break;
     case 7:
-        setupCurve();
+        setupGameOfLife();
         break;
     case 8:
         setupTetrisClock();
@@ -319,7 +319,7 @@ void loadSettings() {
     EEPROM.get(address++, version);
 
     if (version == SETTINGS_MAGIC) { // Valid settings in EEPROM?
-//        EEPROM.get(address, dispMode);
+// FIXME       EEPROM.get(address, dispMode);
         address = address + sizeof (dispMode);
         EEPROM.get(address, fg_color);
         address = address + sizeof (fg_color);
@@ -380,7 +380,7 @@ void setup() {
 
   loadSettings();
   //For debugging:
-  dispMode=1;
+  dispMode=4;
 
   switch (dispMode) {
     case 1:
@@ -402,7 +402,7 @@ void setup() {
         setupHalloween();
         break;
     case 7:
-        setupCurve();
+        setupGameOfLife();
         break;
     case 8:
         setupTetrisClock();
@@ -468,7 +468,7 @@ void loop() {
             loopHalloween();
             break;
         case 7:
-            loopCurve();
+            loopGameOfLife();
             break;
         case 8:
             loopTetrisClock();
