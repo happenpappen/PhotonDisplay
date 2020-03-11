@@ -21,8 +21,8 @@
 #include "images/osterhasi/osterhasi_18.h"
 #include "images/osterhasi/osterhasi_19.h"
 #include "images/osterhasi/osterhasi_20.h"
-#include "images/osterhasi/osterhasi_21.h"
-/*#include "images/osterhasi/osterhasi_22.h"
+/*#include "images/osterhasi/osterhasi_21.h"
+#include "images/osterhasi/osterhasi_22.h"
 #include "images/osterhasi/osterhasi_23.h"
 #include "images/osterhasi/osterhasi_24.h"
 #include "images/osterhasi/osterhasi_25.h"
@@ -53,8 +53,8 @@ const uint16_t *osterhasi_images[] {
   osterhasi_18,
   osterhasi_19,
   osterhasi_20,
-  osterhasi_21,
-  /*osterhasi_22,
+  /*osterhasi_21,
+  osterhasi_22,
   osterhasi_23,
   osterhasi_24,
   osterhasi_25,
@@ -87,7 +87,7 @@ void loopHalloween() {
   matrix.drawRGBBitmap(64, 0, (const uint16_t *)osterhasi_images[counter], 64, 16);
 
   counter = counter+1;
-  if (counter > 21) { counter = 0; }
+  if (counter > 20) { counter = 0; }
   
   // Update display
   matrix.swapBuffers(true);

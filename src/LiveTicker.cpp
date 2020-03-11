@@ -79,28 +79,28 @@ bool readReponseContent(TeamData* teamData) {
   
   response.body.getBytes(responseBody,response.body.length());
   
-  StaticJsonBuffer<200> jsonBuffer;
+  StaticJsonDocument<200> jsonBuffer;
 
-  JsonObject& root = jsonBuffer.parseObject((char *)responseBody);
+  DeserializationError error = deserializeJson(jsonBuffer, (char *)responseBody);
 
-  if (!root.success()) {
-    Particle.publish("DEBUG","parseObject() failed",PRIVATE);
+  if (error) {
+    Particle.publish("DEBUG","deserializeJson() failed",PRIVATE);
     return false;
   }
 
-  const char* sensor = root["sensor"];
-  long time = root["time"];
-  double latitude = root["data"][0];
-  double longitude = root["data"][1];
+  const char* sensor = jsonBuffer["sensor"];
+  long time = jsonBuffer["time"];
+  double latitude = jsonBuffer["data"][0];
+  double longitude = jsonBuffer["data"][1];
 
-  if (!root.success()) {
+  if (jsonBuffer.isNull()) {
     Serial.println("JSON parsing failed!");
     Particle.publish("DEBUG","JSON parsing failed!",PRIVATE);
     return false;
   }
 
   // Here were copy the strings we're interested in
-  strcpy(teamData->teamname, root["name"]);
+  strcpy(teamData->teamname, jsonBuffer["name"]);
   // It's not mandatory to make a copy, you could just use the pointers
   // Since, they are pointing inside the "content" buffer, so you need to make
   // sure it's still in memory when you read the string
