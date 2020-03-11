@@ -54,14 +54,5 @@ void loopPong() {
         if (rgbPongAnim[i]) rgbPongAnim[i]->drawFrame(day);
     }
 
-/*
- *     int x=0, y=0;
-
-    for (y = 0; y < 16; y++) {
-        for (int x = 0; x < 16; x++) {
-          matrix.drawPixel(64+x, y, image_data_bvb[x+y*16]);
-        }
-    }   
-*/    
     matrix.swapBuffers(true);
 }
