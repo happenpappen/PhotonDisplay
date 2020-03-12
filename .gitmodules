@@ -3,4 +3,4 @@
 	url = https://github.com/bblanchon/ArduinoJson
 [submodule "lib/RGBAnimation"]
 	path = lib/RGBAnimation
-	url = https://github.com/ScruffR/RGBAnimation
+	url = https://github.com/happenpappen/RGBAnimation
