@@ -8,6 +8,7 @@
 #include "fonts/roboto-condlight.h"
 #include "fonts/roboto-light.h"
 #include "RGBmatrixPanel.h" // Hardware-specific library
+#include "RGBmatrixSprites.h"
 #include "math.h"
 #include "MQTT.h"
 #include "MQTT_credentials.h"
@@ -54,8 +55,8 @@ bool displayEnabled = true;
 #define ONE_DAY_MILLIS (24 * 60 * 60 * 1000)
 unsigned long lastSync = millis();
 
-uint16_t fg_color = 0xFFFF;
-uint16_t bg_color = 0x0000;
+CRGB fg_color = 0xFFFF;
+CRGB bg_color = 0x0000;
 uint16_t brightness = 255;
 static uint16_t dispMode = 1;
 
@@ -181,48 +182,55 @@ int setBrightness(String value)
 }
 
 String getFgColor()
-{
-    return fgColorStr;
-}
+ {
+     return String::format("%0.3d,%0.3d,%0.3d", fg_color.red, fg_color.green, fg_color.blue);
+ }
 
-int setFgColor(String newColor)
-{
-    uint8_t red=255,green=255,blue=255;
+ int setFgColor(String command)
+ {
+     char *rgbstr = (char *) malloc(command.length() + 1);
 
-    if (newColor.length()==7) {
-        red = strtol(String("0x"+newColor.substring(1,2)),NULL,16);
-        green = strtol(String("0x"+newColor.substring(3,4)),NULL,16);
-        blue = strtol(String("0x"+newColor.substring(5)),NULL,16);
-    }
+     rgbstr = strcpy(rgbstr, (const char *) command);
 
-    fg_color = matrix.Color888(red,green,blue);
-    fgColorStr = newColor;
+     if (command.length() == 11) {
+         int r = atoi(strsep(&rgbstr, ","));
+         int g = atoi(strsep(&rgbstr, ","));
+         int b = atoi(strsep(&rgbstr, ","));
 
-    saveSettings();
-    return 1;
-}
+         fg_color = CRGB(r, g, b);
+     }
 
-String getBgColor() {
-    return bgColorStr;
-}
+     free(rgbstr);
 
-int setBgColor(String newColor) {
+     saveSettings();
+     return 1;
+ }
 
-    uint8_t red=0,green=0,blue=0;
+ String getBgColor()
+ {
+     return String::format("%0.3d,%0.3d,%0.3d", bg_color.red, bg_color.green, bg_color.blue);
+ }
 
-    if (newColor.length()==7) {
-        red = strtol(String("0x"+newColor.substring(1,2)),NULL,16);
-        green = strtol(String("0x"+newColor.substring(3,4)),NULL,16);
-        blue = strtol(String("0x"+newColor.substring(5)),NULL,16);
-    }
+ int setBgColor(String command)
+ {
+     char *rgbstr = (char *) malloc(command.length() + 1);
 
-    bg_color = matrix.Color888(red,green,blue);
-    bgColorStr = newColor;
+     rgbstr = strcpy(rgbstr, (const char *) command);
 
-    saveSettings();
-    return 1;
-}
+     if (command.length() == 11) {
+         int r = atoi(strsep(&rgbstr, ","));
+         int g = atoi(strsep(&rgbstr, ","));
+         int b = atoi(strsep(&rgbstr, ","));
 
+         bg_color = CRGB(r, g, b);
+     }
+
+     free(rgbstr);
+
+     saveSettings();
+     return 1;
+ }
+ 
 int enableDisplay(String command) {
 
     displayEnabled = true;
