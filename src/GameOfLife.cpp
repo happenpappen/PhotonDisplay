@@ -3,7 +3,7 @@
 #define DELAY 1000
 #define DENSITY 40
 
-const uint8_t kMatrixWidth  = 64;
+const uint8_t kMatrixWidth  = 128;
 const uint8_t kMatrixHeight  = 16;
 
 extern uint16_t fg_color;
@@ -32,12 +32,8 @@ void init_matrix()
         for (int y = 0; y < kMatrixHeight; y++) {
             if (random(100) < DENSITY) {
                 world[x][y][0] = 1;
-                matrix.writePixel(x, y, fg_color);
-                matrix.writePixel(x+64, y, fg_color);
             } else {
                 world[x][y][0] = 0;
-                matrix.writePixel(x, y, bg_color);
-                matrix.writePixel(x+64, y, bg_color);
             }
             world[x][y][1] = 0;
         }
@@ -46,9 +42,10 @@ void init_matrix()
 
 void setupGameOfLife()
 {
-
     randomSeed(analogRead(0));                               // Zufallsfunktion initialisieren
 
+    matrix.begin();
+    // Fill matrix with initial values:
     init_matrix();
     // Clear background
     matrix.fillScreen(0);
@@ -93,10 +90,8 @@ void loopGameOfLife()
                 world[x][y][0] = world[x][y][1];
                 if (world[x][y][1] != 0) {
                     matrix.writePixel(x, y, fg_color);
-                    matrix.writePixel(x+64, y, fg_color);
                 } else {
                     matrix.writePixel(x, y, bg_color);
-                    matrix.writePixel(x+64, y, bg_color);
                 }
             }
         }
