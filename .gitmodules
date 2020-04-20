@@ -1,0 +1,6 @@
+[submodule "lib/ArduinoJson"]
+	path = lib/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson
+[submodule "lib/RGBAnimation"]
+	path = lib/RGBAnimation
+	url = https://github.com/happenpappen/RGBAnimation
